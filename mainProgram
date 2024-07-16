@@ -1,0 +1,26 @@
+#Install the required libraries
+
+!pip install ibm_watson
+
+from ibm_watson import SpeechToTextV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+#Get the right credentials
+
+apiKey = 'tGj1-cXJIaJ0gZo2u4uxNlOpP4cd_UKCC735kZrGrG0V'
+url = 'https://api.au-syd.speech-to-text.watson.cloud.ibm.com/instances/ee3709a6-3249-457a-ba18-bc1d44d1ba16'
+
+authenticator = IAMAuthenticator(apiKey)
+stt = SpeechToTextV1(authenticator=authenticator)
+stt.set_service_url(url)
+
+#Convert the audio file into a dictionary
+
+with open('helloWorld.mp3','rb') as file:
+  res = stt.recognize(file,content_type='audio/mp3',model='en-US_NarrowbandModel').get_result()
+
+text = res['results'][0]['alternatives'][0]['transcript']
+
+with open('output.txt','w') as file:
+  file.write(text)
+
